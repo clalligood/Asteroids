@@ -12,6 +12,8 @@ public abstract class AbstractEntity {
 	
 	private final static Vector2f maxSpeed = new Vector2f(.9f, .9f);
 	
+	protected int displayMult = 0;
+	
 	protected Image myImage;
 	protected Vector2f myPosition;
 	protected Vector2f myVelocity;
@@ -23,17 +25,17 @@ public abstract class AbstractEntity {
 		myVelocity = theVelocity;
 	}
 	
-	public abstract void init(GameContainer gc, StateBasedGame sbg);
+	public abstract void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
 	
-	public abstract void update(GameContainer gc, StateBasedGame sbg, int delta);
+	public abstract int update(GameContainer gc, StateBasedGame sbg, int delta);
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		myImage.draw(myPosition.x-(myImage.getWidth()/2), myPosition.y-(myImage.getHeight()/2));
-		g.drawString("Pos: " + myPosition.toString(), 15, 15);
-		g.drawString("Vel: " + myVelocity.toString(), 15, 30);
-		g.drawString("Rot: " + myRotation, 15, 45);
-		g.drawString("Img Rot: " + myImage.getRotation(), 15, 60);
-		
+
+		g.drawString("Pos: " + myPosition.toString(), 15*displayMult, 15);
+		g.drawString("Vel: " + myVelocity.toString(), 15*displayMult, 30);
+		g.drawString("Rot: " + myRotation, 15*displayMult, 45);
+		g.drawString("Img Rot: " + myImage.getRotation(), 15*displayMult, 60);
 	}
 	
 	public void rotate(float theRotation) {
@@ -43,6 +45,14 @@ public abstract class AbstractEntity {
 	
 	public Vector2f getPosition() {
 		return myPosition;
+	}
+	
+	public float getRotation() {
+		return myRotation;
+	}
+	
+	public void setImage(String theString) throws SlickException {
+		myImage = new Image(theString);
 	}
 	
 	public void applyForce(Vector2f theForce) {
@@ -64,11 +74,22 @@ public abstract class AbstractEntity {
 		  return result;
 	}
 	
-	public void forceInvert() {
+	public void decelerate() {
 		Vector2f normalizedVelocity = myVelocity.copy();
 		normalizedVelocity.x = (float) (normalizedVelocity.getX() * .02);
 		normalizedVelocity.y = (float) (normalizedVelocity.getY() * .02);
 		normalizedVelocity.negate();
 		myVelocity.sub(normalizedVelocity);
 	}
+
+	private boolean doesCollide(AbstractEntity theEntity) {
+		return true;
+	}
+	
+	private boolean checkDistance() {
+		if ((myPosition.x > 1000) || (myPosition.y > 1000) || (myPosition.x < -1000) || (myPosition.y < -1000)) {
+			return true;
+		} return false;
+	}
+
 }

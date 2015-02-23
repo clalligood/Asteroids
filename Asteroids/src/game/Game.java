@@ -4,23 +4,23 @@
 package game;
 
 import game.objects.AbstractEntity;
+import game.objects.Bullet;
 import game.objects.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-/**
- * @author anthonyzullo
- *
- */
 public class Game extends BasicGameState {
 
 	private static int myID = 1;
@@ -30,11 +30,14 @@ public class Game extends BasicGameState {
 	
 	private ArrayList<AbstractEntity> gameObjects;
 	private Point[] stars = new Point[numberOfStars];
+	
+	private Set<AbstractEntity> collidedObjects;
 
 	public Game(int theID) {
 		myID = theID;
 		
 		gameObjects = new ArrayList<AbstractEntity>();
+		collidedObjects = new HashSet<>();
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +63,7 @@ public class Game extends BasicGameState {
 			throws SlickException {
 		drawStars(g);
 		
-		g.drawString("Mutha Fukkin' Space Wars", gc.getWidth()/2-50, 15);
+		g.drawString("Mutha Fukkin' Space Wars", gc.getWidth()/2-50, 485);
 		
 		for(AbstractEntity gameObject : gameObjects) {
 			gameObject.render(gc, sbg, g);
@@ -74,8 +77,22 @@ public class Game extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		for(AbstractEntity gameObject : gameObjects) {
-			gameObject.update(gc, sbg, delta);
+		for(int i = 0; i < gameObjects.size(); i++) {
+			
+			AbstractEntity gameObject = gameObjects.get(i);
+			
+			switch(gameObject.update(gc, sbg, delta)) {
+			case 0:
+				gameObjects.remove(i);
+				break;
+			case 2:
+				//Create a bullet object
+				gameObjects.add(new Bullet(new Vector2f(gameObject.getPosition().copy()), gameObject.getRotation()));
+				break;
+			case 1:
+			default:
+				break;
+			}
 		}
 	}
 
@@ -122,6 +139,17 @@ public class Game extends BasicGameState {
 			double random = randX.nextGaussian() * 34;
 			int yPos = randY.nextInt(600);
 			stars[i] = new Point((float)random+400, yPos);
+		}
+	}
+	
+	/**
+	 * Checks to see if their is a collision between two AbstractEntities
+	 * @param theAbstractEntities
+	 */
+	private void checkCollisions(ArrayList<AbstractEntity> theAbstractEntities) {
+		for (AbstractEntity entity : theAbstractEntities) {
+			entity.getPosition().getX();
+			entity.getPosition().getY();
 		}
 	}
 	

@@ -11,9 +11,17 @@ public class Player extends AbstractEntity {
 	private static String imageString = "/assets/img/ship.png";
 	private static Vector2f thePosition = new Vector2f(400, 300);
 	private static Vector2f theVelocity = new Vector2f(0, 0);
+	private static final int shotBaseTime = 100;
+	
+	private int myLife = 100;
+	
+	private boolean hasShot = false;
+	
+	private int myShotTimer = 0;
 	
 	public Player() throws SlickException {
 		super(imageString, thePosition, theVelocity);
+		displayMult = 1;
 	}
 
 	@Override
@@ -22,12 +30,13 @@ public class Player extends AbstractEntity {
 	}
 
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+	public int update(GameContainer gc, StateBasedGame sbg, int delta) {
 		Input input = gc.getInput();
 		if (input.isKeyDown(Input.KEY_UP)) {
 			this.applyForce(rotateVector(new Vector2f(0, 0.025f)));
 		} else if (input.isKeyDown(Input.KEY_DOWN)) {
-			this.applyForce(rotateVector(new Vector2f(0, -0.025f)));
+			this.decelerate();
+			//this.applyForce(rotateVector(new Vector2f(0, -0.025f)));
 		}
 		
 		if (input.isKeyDown(Input.KEY_RIGHT)) {
@@ -37,10 +46,31 @@ public class Player extends AbstractEntity {
 		}
 		
 		if (input.isKeyDown(Input.KEY_SPACE)) {
-			this.forceInvert();
+			this.shoot();
 		}
 		
+
 		myPosition.add(myVelocity);
+		if (myShotTimer > 0) {
+			myShotTimer -= 5;
+		}
+		if (myLife <= 0) {
+			return 0;
+		}
+		else if (hasShot) {
+			hasShot = false;
+			return 2;
+		}
+		else {
+			return 1;
+		}
+	}
+	
+	public void shoot() {
+		if (myShotTimer <= 0) {
+			hasShot = true;
+			myShotTimer = shotBaseTime;
+		}
 	}
 
 }
