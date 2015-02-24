@@ -11,7 +11,7 @@ public class GameOver extends org.newdawn.slick.state.BasicGameState {
 
 	private static int myID = 2;
 	
-	private String printString = "Game Over Mutha' Fucka. You suck!";
+	private String printString = "Game Over. Too Bad, So Sad.\nPress Enter to Try Again";
 	
 	public GameOver(int theID) {
 		myID = theID;
