@@ -10,14 +10,19 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Asteroid extends AbstractEntity {
 
 	private static String imageString = "/assets/img/asteroid1.png";
-	
-	private final static Vector2f asteroidVelocity = new Vector2f(2.5f, 2.5f);
-	
-	private int myHealth = 20;
 
-	public Asteroid(String theImage, Vector2f thePosition, Vector2f theVelocity)
+	public Asteroid(Random theRandom)
 			throws SlickException {
-		super(imageString, thePosition, asteroidVelocity);
+		super(imageString, new Vector2f(0, 0), new Vector2f(0.1f, 0.1f));
+		
+		this.rotate(theRandom.nextInt(360));
+		this.setVelocity(rotateVector(myVelocity));
+		
+		int randX = theRandom.nextInt(800);
+		int randY = theRandom.nextInt(600);
+		
+		this.setPosition(new Vector2f(randX, randY));
+		myHealth = 100;
 	}
 
 	@Override
@@ -42,12 +47,17 @@ public class Asteroid extends AbstractEntity {
 	@Override
 	public int update(GameContainer gc, StateBasedGame sbg, int delta) {
 		myPosition.add(myVelocity);
-		
+				
 		if (myHealth <= 0) {
 			return 0;
 		} else {
 			return 1;
 		}
+	}
+
+	@Override
+	public void collide(AbstractEntity theEntity) {
+		theEntity.applyDamage(100);
 	}
 
 }

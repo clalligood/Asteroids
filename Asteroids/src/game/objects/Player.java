@@ -19,6 +19,8 @@ public class Player extends AbstractEntity {
 	
 	private int myShotTimer = 0;
 	
+	private boolean isGameOver = false;
+	
 	public Player() throws SlickException {
 		super(imageString, thePosition, theVelocity);
 		displayMult = 1;
@@ -71,6 +73,18 @@ public class Player extends AbstractEntity {
 			hasShot = true;
 			myShotTimer = shotBaseTime;
 		}
+	}
+
+	@Override
+	public void collide(AbstractEntity theEntity) {
+		if (theEntity instanceof Asteroid){
+			isGameOver = true;
+		}
+		
+	}
+	
+	public boolean isGameOver() {
+		return isGameOver;
 	}
 
 }
