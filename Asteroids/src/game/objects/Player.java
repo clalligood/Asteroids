@@ -87,4 +87,7 @@ public class Player extends AbstractEntity {
 		return isGameOver;
 	}
 
+	public void resetGame() {
+		isGameOver = false;
+	}
 }

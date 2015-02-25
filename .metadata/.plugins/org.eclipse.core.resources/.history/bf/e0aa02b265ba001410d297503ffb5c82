@@ -1,0 +1,71 @@
+/**
+ * 
+ */
+package game;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
+
+/**
+ * @author anthonyzullo
+ *
+ */
+public class Game extends BasicGameState {
+
+	private static int myID = 1;
+
+	private Image myImage;
+	/**
+	 * 
+	 */
+	public Game() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Game(int theID) {
+		myID = theID;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#init(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
+	 */
+	@Override
+	public void init(GameContainer gc, StateBasedGame sbg)
+			throws SlickException {
+		myImage = new Image("/assets/theImage.jpg");
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#render(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.Graphics)
+	 */
+	@Override
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+			throws SlickException {
+		g.drawString("The Game State", 500, 500);
+		myImage.draw(300f, 300f);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#update(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, int)
+	 */
+	@Override
+	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
+			throws SlickException {
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.BasicGameState#getID()
+	 */
+	@Override
+	public int getID() {
+		// TODO Auto-generated method stub
+		return myID;
+	}
+
+}

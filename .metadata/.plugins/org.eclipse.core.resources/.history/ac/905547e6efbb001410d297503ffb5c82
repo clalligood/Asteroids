@@ -1,0 +1,64 @@
+import game.Game;
+import gameMenu.GameMenu;
+
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.state.StateBasedGame;
+
+/**
+ * The Main Game part of the program that starts the game.
+ * @author Collin, Tony
+ * @version 2015/02/23
+ */
+public class Asteroids extends StateBasedGame {
+
+	/** The name of the Game! */
+	final static String gameName = "Asteroids";
+	/** Determines whether the Game iss fullscreen. */
+	final static boolean fullscreen = false;
+	/** Set this shit to false. */
+	final static boolean showFPS = false;
+	/** The target frames per screen. */
+	final static int targetFPS = 60;
+	/** The Original Window size of the game. */
+	final static Point windowSize = new Point(800, 600);
+	/** Game Menu State associated with the Game Menu State. */
+	final static int gameMenu = 0;
+	/** The Game State number associated with the Game State. */
+	final static int game = 1;
+	
+	/** The AppGameContainter that this game is contained in. */
+	private static AppGameContainer app;
+		
+	public Asteroids(String name) {
+		super(name);
+	}
+	/**
+	 * The Different Games States List that are all added to the (this)
+	 * game container. 
+	 */
+	@Override
+	public void initStatesList(GameContainer container) throws SlickException {
+		this.addState(new GameMenu(gameMenu));
+		this.addState(new Game(game));
+		this.addState new
+		this.enterState(gameMenu);
+	}
+
+	/**
+	 * The main program that runs the game, sets the frames per second,
+	 * and sets the Target Frame Rate and starts the game.
+	 * @param args
+	 * @throws SlickException
+	 */
+	public static void main(String[] args) throws SlickException {
+		app = new AppGameContainer(new Asteroids(gameName));
+		app.setDisplayMode((int)windowSize.getX(), (int)windowSize.getY(), fullscreen);
+		app.setShowFPS(showFPS);
+		app.setTargetFrameRate(targetFPS);
+		app.start();
+	}
+
+}

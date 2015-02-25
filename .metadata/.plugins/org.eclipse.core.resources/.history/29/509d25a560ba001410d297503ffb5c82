@@ -1,0 +1,7 @@
+package gameMenu;
+
+import org.newdawn.slick.BasicGameState;
+
+public class gameMenu extends BasicGameState {
+
+}

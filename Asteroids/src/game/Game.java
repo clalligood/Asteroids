@@ -53,12 +53,13 @@ public class Game extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+
+		gameObjects.clear();
 		this.createStars();
 		myPlayer = new Player();
 		gameObjects.add(myPlayer);
 		
 		Random myRandom = new Random();
-		
 		for( int i = 0; i < numberOfAsteroids; i++) {
 			gameObjects.add(new Asteroid(myRandom));
 		}
@@ -185,6 +186,13 @@ public class Game extends BasicGameState {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets my player to restart the game
+	 */
+	public Player getPlayer() {
+		return myPlayer;
 	}
 	
 }

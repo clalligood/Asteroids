@@ -1,0 +1,54 @@
+package game.objects;
+
+import java.util.Random;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.StateBasedGame;
+
+public class Asteroid extends AbstractEntity {
+
+	private final static String imageString = "/assets/img/asteroid1.png";
+	
+	private final static Vector2f asteroidVelocity = new Vector2f(2.5f, 2.5f);
+	
+	private int myHealth = 20;
+
+	public Asteroid(String theImage, Vector2f thePosition, Vector2f theVelocity)
+			throws SlickException {
+		super(imageString, thePosition, asteroidVelocity);
+	}
+
+	@Override
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		Random rand = new Random();
+		switch(rand.nextInt(3)) {
+			case 1:
+				imageString = "/assets/img/asteroid1.png";
+				break;
+			case 2:
+				imageString = "/assets/img/asteroid2.png";
+				break;
+			case 3:
+			default:
+				imageString = "/assets/img/asteroid3.png";
+				break;
+		}
+
+		this.setImage(imageString);
+	}
+
+	@Override
+	public int update(GameContainer gc, StateBasedGame sbg, int delta) {
+		myPosition.add(myVelocity);
+		
+		if (myHealth <= 0) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+}

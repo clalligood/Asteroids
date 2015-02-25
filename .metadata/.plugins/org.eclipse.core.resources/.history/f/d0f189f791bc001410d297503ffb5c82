@@ -1,0 +1,55 @@
+package gameMenu;
+
+import java.awt.Font;
+
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
+
+
+public class GameMenu extends org.newdawn.slick.state.BasicGameState {
+
+	private static int myID = 0;
+	
+	private String printString = "Press Enter to Start the Game.";
+	
+	public GameMenu(int theID) {
+		myID = theID;
+	}
+	
+	@Override
+	public void init(GameContainer arg0, StateBasedGame arg1)
+			throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+			throws SlickException {
+		String gameTitle = "Asteroids";
+		g.setColor(Color.green);
+		Font awtFont = new Font(g.getFont(), Font.BOLD, 24);
+		g.drawString(gameTitle, (float) ((gc.getWidth() - g.getFont().getWidth(gameTitle)) / 2.0), 150);
+		g.drawString(printString, 250, 170);
+	}
+
+	@Override
+	public void update(GameContainer gc, StateBasedGame sbg, int delta)
+			throws SlickException {
+		Input input = gc.getInput();
+		
+		if (input.isKeyDown(Input.KEY_ENTER)) {
+			sbg.enterState(1);
+		}
+	}
+
+	@Override
+	public int getID() {
+		return myID;
+	}
+
+}

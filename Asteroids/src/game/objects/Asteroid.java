@@ -13,7 +13,7 @@ public class Asteroid extends AbstractEntity {
 
 	public Asteroid(Random theRandom)
 			throws SlickException {
-		super(imageString, new Vector2f(0, 0), new Vector2f(0.1f, 0.1f));
+		super(imageString, new Vector2f(0, 0), new Vector2f(.5f, .5f));
 		
 		this.rotate(theRandom.nextInt(360));
 		this.setVelocity(rotateVector(myVelocity));
@@ -57,7 +57,12 @@ public class Asteroid extends AbstractEntity {
 
 	@Override
 	public void collide(AbstractEntity theEntity) {
-		theEntity.applyDamage(100);
+		if (theEntity instanceof Bullet) {
+			theEntity.applyDamage(100);
+		} else if (theEntity instanceof Asteroid) {
+			this.setVelocity(rotateVector(
+					new Vector2f(myVelocity.getX() * -1.2f, myVelocity.getY())));
+		}
 	}
 
 }

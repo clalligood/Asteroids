@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="lib"/>
-	<classpathentry kind="src" path="native"/>
+	<classpathentry kind="src" path="native">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Asteroids/bin/macosx"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry excluding="img/" kind="src" path="assets"/>
 	<classpathentry kind="src" path="assets/img"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>

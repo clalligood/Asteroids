@@ -1,0 +1,41 @@
+package gameMenu;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
+
+
+public class GameMenu extends org.newdawn.slick.state.BasicGameState {
+
+	private static int myID = 0;
+	
+	public GameMenu(int theID) {
+		myID = theID;
+	}
+	
+	@Override
+	public void init(GameContainer arg0, StateBasedGame arg1)
+			throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+			throws SlickException {
+		g.drawString("Hello Tony", 150, 150);
+	}
+
+	@Override
+	public void update(GameContainer gc, StateBasedGame sbg, int delta)
+			throws SlickException {
+		Input input = gc.getInput();
+	}
+
+	@Override
+	public int getID() {
+		return myID;
+	}
+
+}

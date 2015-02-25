@@ -1,0 +1,196 @@
+/**
+ * 
+ */
+package game;
+
+import game.objects.AbstractEntity;
+import game.objects.Asteroid;
+import game.objects.Bullet;
+import game.objects.Player;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
+
+public class Game extends BasicGameState {
+
+	/** The Game State ID that is used for this Game State. */
+	private static int myID = 1;
+	/** The number of stars that are randomly generated. */
+	private static int numberOfStars = 1150;
+	/** The Galaxy Core Density of this Solar System. */
+	private static int galaxyCoreDensity = 700;
+	
+	private static int numberOfAsteroids = 20;
+	/** All of the Game Objects within this game. */
+	private ArrayList<AbstractEntity> gameObjects;
+	/** The array of all the different stars. */
+	private Point[] stars = new Point[numberOfStars];
+	/** The player playing this game. */
+	private Player myPlayer;
+	/**
+	 * Calls the new Game
+	 * @param theID
+	 */
+	public Game(int theID) {
+		myID = theID;
+		/** Initializes the game objects array list. */
+		gameObjects = new ArrayList<AbstractEntity>();
+		/** Initializes all the game objects that have collided. */
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#init(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
+	 */
+	@Override
+	public void init(GameContainer gc, StateBasedGame sbg)
+			throws SlickException {
+		this.createStars();
+		myPlayer = new Player();
+		gameObjects.add(myPlayer);
+		
+		Random myRandom = new Random();
+		for( int i = 0; i < numberOfAsteroids; i++) {
+			gameObjects.add(new Asteroid(myRandom));
+		}
+		
+		for( AbstractEntity gameObject : gameObjects) {
+			gameObject.init(gc, sbg);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#render(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.Graphics)
+	 */
+	@Override
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
+			throws SlickException {
+		drawStars(g);
+		
+		g.drawString("Space Wars", gc.getWidth()/2-50, 485);
+		
+		for(AbstractEntity gameObject : gameObjects) {
+			gameObject.render(gc, sbg, g);
+		}
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#update(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, int)
+	 */
+	@Override
+	public void update(GameContainer gc, StateBasedGame sbg, int delta)
+			throws SlickException {
+		for(int i = 0; i < gameObjects.size(); i++) {
+			
+			AbstractEntity gameObject = gameObjects.get(i);
+			
+			switch(gameObject.update(gc, sbg, delta)) {
+			case 0:
+				gameObjects.remove(i);
+				break;
+			case 2:
+				
+				if (gameObject.getClass() == Player.class) {
+					//Create a bullet object
+					gameObjects.add(new Bullet(new Vector2f(gameObject.getPosition().copy()), gameObject.getRotation()));
+				}
+				break;
+			case 1:
+			default:
+				break;
+			}
+		}
+		this.checkCollisions();
+		if (myPlayer.isGameOver()) {
+			sbg.enterState(2);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.BasicGameState#getID()
+	 */
+	@Override
+	public int getID() {
+		return myID;
+	}
+
+	private void drawStars(Graphics g) {
+		Color oldColor = g.getColor();
+		g.rotate(400, 300, 0);
+		g.setColor(Color.white);
+		
+		for(int i = 0; i < numberOfStars; i++) {
+			Point thePoint = stars[i];
+			Random randTwinkle = new Random();
+			int twinkDistance = 3;
+			/**
+			 * We do Twinkling here
+			 */
+			if (randTwinkle.nextInt(1000) > 950) {
+				g.drawLine(thePoint.getX(), thePoint.getY(), thePoint.getX()+randTwinkle.nextInt(twinkDistance)-1, thePoint.getY()+randTwinkle.nextInt(twinkDistance)-1);
+			} else {
+				g.drawLine(thePoint.getX(), thePoint.getY(), thePoint.getX(), thePoint.getY());
+			}
+		}
+		
+		g.resetTransform();
+		g.setColor(oldColor);
+	}
+	
+	private void createStars() {
+		Random randX = new Random();
+		Random randY = new Random();
+		for(int i = 0; i < numberOfStars-galaxyCoreDensity; i++) {
+			double random = randX.nextGaussian() * 200;
+			stars[i] = new Point((float)random+400, randY.nextInt(600));
+		}
+		
+		for(int i = numberOfStars-galaxyCoreDensity; i < numberOfStars; i++) {
+			double random = randX.nextGaussian() * 34;
+			int yPos = randY.nextInt(600);
+			stars[i] = new Point((float)random+400, yPos);
+		}
+	}
+	
+	/**
+	 * Checks to see if their is a collision between two AbstractEntities
+	 * @param theAbstractEntities
+	 */
+	private void checkCollisions() {
+		/*
+		 * loops through every single entity against another entity and determines
+		 * whether it has collided with another entity.
+		 */
+		
+		ArrayList<Point> pairs = new ArrayList<>();
+		
+		for (AbstractEntity outerEntity : gameObjects) {
+			for (AbstractEntity innerEntity : gameObjects) {
+				if (outerEntity.doesCollide(innerEntity) && outerEntity != innerEntity) {
+					Point theFlippedPair = new Point(gameObjects.indexOf(innerEntity), gameObjects.indexOf(outerEntity));
+					if (!pairs.contains(theFlippedPair)) {
+						pairs.add(new Point(gameObjects.indexOf(outerEntity), gameObjects.indexOf(innerEntity)));
+						outerEntity.collide(innerEntity);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets my player to restart the game
+	 */
+	public Player getPlayer() {
+		return myPlayer;
+	}
+	
+}

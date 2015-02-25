@@ -1,0 +1,82 @@
+package game.objects;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.StateBasedGame;
+
+
+public abstract class AbstractEntity {
+	
+	private final static Vector2f maxSpeed = new Vector2f(.9f, .9f);
+	
+	protected Image myImage;
+	protected Vector2f myPosition;
+	protected Vector2f myVelocity;
+	protected float myRotation = 0;
+	
+	public AbstractEntity(String theImage, Vector2f thePosition, Vector2f theVelocity) throws SlickException {
+		myImage = new Image(theImage);
+		myPosition = thePosition;
+		myVelocity = theVelocity;
+	}
+	
+	public abstract void init(GameContainer gc, StateBasedGame sbg);
+	
+	public abstract int update(GameContainer gc, StateBasedGame sbg, int delta);
+	
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
+		myImage.draw(myPosition.x-(myImage.getWidth()/2), myPosition.y-(myImage.getHeight()/2));
+		g.drawString("Pos: " + myPosition.toString(), 15, 15);
+		g.drawString("Vel: " + myVelocity.toString(), 15, 30);
+		g.drawString("Rot: " + myRotation, 15, 45);
+		g.drawString("Img Rot: " + myImage.getRotation(), 15, 60);
+		
+	}
+	
+	public void rotate(float theRotation) {
+		myRotation += theRotation;
+		myImage.setRotation(myRotation);
+	}
+	
+	public Vector2f getPosition() {
+		return myPosition;
+	}
+	
+	public float getRotation() {
+		return myRotation;
+	}
+	
+	public void setImage(String theString) {
+		myImage = new Image(theString);
+	}
+	
+	public void applyForce(Vector2f theForce) {
+		myVelocity.add(theForce);
+		
+		myVelocity.x = (myVelocity.x > maxSpeed.x) ? maxSpeed.x : myVelocity.x;
+		myVelocity.x = (myVelocity.x < -maxSpeed.x) ? -maxSpeed.x : myVelocity.x;
+		
+		myVelocity.y = (myVelocity.y > maxSpeed.y) ? maxSpeed.y : myVelocity.y;
+		myVelocity.y = (myVelocity.y < -maxSpeed.y) ? -maxSpeed.y : myVelocity.y;
+	}
+	
+	public Vector2f rotateVector( Vector2f input ) {
+		  Vector2f result = new Vector2f(0, 0);
+		  double cs = Math.cos(Math.toRadians(myRotation));
+		  double sn = Math.sin(Math.toRadians(myRotation));
+		  result.x = (float) (input.x * cs - input.y * sn);
+		  result.y = (float) (input.x * sn + input.y * cs);
+		  return result;
+	}
+	
+	public void decelerate() {
+		Vector2f normalizedVelocity = myVelocity.copy();
+		normalizedVelocity.x = (float) (normalizedVelocity.getX() * .02);
+		normalizedVelocity.y = (float) (normalizedVelocity.getY() * .02);
+		normalizedVelocity.negate();
+		myVelocity.sub(normalizedVelocity);
+	}
+}

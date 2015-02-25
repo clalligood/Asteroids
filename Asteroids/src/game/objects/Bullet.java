@@ -57,7 +57,8 @@ public class Bullet extends AbstractEntity {
 	@Override
 	public void collide(AbstractEntity theEntity) {
 		if(theEntity instanceof Asteroid) {
-			applyDamage(100);
+			myHealth = 0;
+//			applyDamage(100);
 			theEntity.applyDamage(100);
 		}
 	}

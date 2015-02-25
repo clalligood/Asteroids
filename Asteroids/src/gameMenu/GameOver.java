@@ -36,6 +36,7 @@ public class GameOver extends org.newdawn.slick.state.BasicGameState {
 		Input input = gc.getInput();
 		
 		if (input.isKeyDown(Input.KEY_ENTER)) {
+			sbg.getState(1).init(gc, sbg);;
 			sbg.enterState(1);
 		}
 	}

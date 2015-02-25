@@ -1,5 +1,6 @@
 package gameMenu;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -27,9 +28,22 @@ public class GameMenu extends org.newdawn.slick.state.BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
-		g.drawString(printString, 150, 150);
+		String gameTitle = "Welcome to Asteroids";
+		g.setColor(Color.green);
+		centerText(gameTitle, gc, g, 150);
+		g.setColor(Color.white);
+		centerText(printString, gc, g, 200);
 	}
 
+	public void centerText(String theString, GameContainer theGameContainer,
+			Graphics theGraphic,
+			float theVerticalLocation){
+		theGraphic.drawString(theString,
+				(theGameContainer.getWidth()
+						- theGraphic.getFont().getWidth(theString)) / 2.0f,
+						theVerticalLocation);
+		
+	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
